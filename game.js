@@ -66,16 +66,17 @@ function updateUI(isCorrect) {
 
     /**
      * ボタンの活性化と非活性化を設定
-     * 【重要】正解がバレるリング（枠）の表示はここで行いません。
+     * 【修正ポイント】ゲームアクティブ時は常にボタンを完全に有効にし、ヒントを排除します。
      * @param {HTMLElement} button - 対象ボタン要素
      */
     const toggleButtonState = (button) => {
         if (isGameActive) {
+            // ゲームアクティブ時は、常にボタンを有効にし、非活性化クラスを全て削除
             button.disabled = false;
             button.classList.remove('opacity-50', 'cursor-not-allowed');
-            // 正解時のハイライト表示を削除
             button.classList.remove('ring-4', 'ring-offset-2', 'ring-yellow-500'); 
         } else {
+            // 非アクティブ時は、ボタンを無効化
             button.disabled = true;
             button.classList.add('opacity-50', 'cursor-not-allowed');
             button.classList.remove('ring-4', 'ring-offset-2', 'ring-yellow-500');
