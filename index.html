@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3と3の倍数ゲーム (タイムアタック)</title>
+    <!-- Tailwind CSSを読み込み -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Interフォントと、フォールバックとして日本語フォントを設定 */
+        body {
+            font-family: 'Inter', 'Noto Sans JP', sans-serif;
+            transition: background-color 0.3s ease;
+        }
+        /* カスタムアニメーション - 正解時のフラッシュ */
+        @keyframes correct-flash {
+            0% { background-color: #d1fae5; }
+            50% { background-color: #a7f3d0; }
+            100% { background-color: #d1fae5; }
+        }
+        /* カスタムアニメーション - 不正解時のフラッシュ */
+        @keyframes incorrect-flash {
+            0% { background-color: #fee2e2; }
+            50% { background-color: #fca5a5; }
+            100% { background-color: #fee2e2; }
+        }
+        .correct-flash-bg {
+            animation: correct-flash 0.3s ease-out;
+        }
+        .incorrect-flash-bg {
+            animation: incorrect-flash 0.3s ease-out;
+        }
+        /* ゲームオーバーモーダル */
+        .modal-overlay {
+            z-index: 10;
+            background-color: rgba(0, 0, 0, 0.7);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4 bg-gray-100">
+
+    <!-- メインコンテナ -->
+    <div id="game-container" class="w-full max-w-md bg-white shadow-2xl rounded-xl p-8 text-center relative overflow-hidden">
+        
+        <h1 class="text-3xl font-extrabold text-gray-800 mb-6">
+            ３と３の倍数ゲーム
+        </h1>
+        <p class="text-lg text-gray-600 mb-4">
+            1分間で連続カウント記録に挑戦！
+        </p>
+
+        <!-- ステータス表示エリア (タイマーとスコア) -->
+        <div class="flex justify-between items-center mb-6 p-3 bg-gray-50 rounded-lg border">
+            <div class="text-left">
+                <p class="text-sm font-semibold text-gray-500">スコア</p>
+                <span id="score-display" class="text-4xl font-bold text-indigo-700">0</span>
+            </div>
+            <div class="text-right">
+                <p class="text-sm font-semibold text-gray-500">残り時間</p>
+                <span id="timer-display" class="text-4xl font-bold text-red-600">60</span>
+            </div>
+        </div>
+        
+        <!-- 現在の数字またはメッセージを表示するエリア -->
+        <div id="number-display-area" class="h-32 flex items-center justify-center bg-indigo-50 border-4 border-indigo-200 rounded-lg mb-10 transition-all duration-100 ease-in-out">
+            <span id="current-number-text" class="text-6xl font-black text-indigo-700 select-none">
+                1
+            </span>
+        </div>
+
+        <!-- アクションボタンコンテナ -->
+        <div id="button-container" class="flex gap-4">
+            <!-- 「アホじゃない」ボタン（条件を満たしていないとき） - 左側 -->
+            <button id="not-aho-button" data-is-aho="false" disabled class="flex-1 py-4 px-3 bg-green-500 text-white text-xl font-bold rounded-xl shadow-lg hover:bg-green-600 active:bg-green-700 focus:outline-none focus:ring-4 focus:ring-green-300 transition-all duration-200 opacity-50 cursor-not-allowed">
+                アホじゃない
+            </button>
+            
+            <!-- 「アホ」ボタン（条件を満たしているとき） - 右側 -->
+            <button id="aho-button" data-is-aho="true" disabled class="flex-1 py-4 px-3 bg-red-500 text-white text-xl font-bold rounded-xl shadow-lg hover:bg-red-600 active:bg-red-700 focus:outline-none focus:ring-4 focus:ring-red-300 transition-all duration-200 opacity-50 cursor-not-allowed">
+                アホ！
+            </button>
+        </div>
+
+        <!-- スタート/ゲームオーバー モーダル -->
+        <div id="game-modal" class="modal-overlay absolute inset-0 flex items-center justify-center transition-opacity duration-300">
+            <div class="bg-white p-8 rounded-xl shadow-2xl w-11/12 max-w-sm text-center transform scale-100 transition-transform duration-300">
+                <h2 id="modal-title" class="text-3xl font-extrabold text-gray-800 mb-4">
+                    ゲームスタート
+                </h2>
+                <p id="modal-message" class="text-gray-600 mb-6">
+                    「3」が付くか「3の倍数」なら「アホ！」、それ以外なら「アホじゃない」ボタンを押そう。<br>間違えると即終了！
+                </p>
+                <button id="start-button" class="w-full py-3 bg-indigo-600 text-white text-xl font-bold rounded-lg hover:bg-indigo-700 active:scale-[0.98]">
+                    ゲーム開始！
+                </button>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- JavaScriptファイルを読み込む -->
+    <script src="game.js" defer></script>
+</body>
+</html>
