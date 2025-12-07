@@ -62,7 +62,7 @@ function updateUI(isCorrect) {
     currentNumberText.textContent = currentNumber;
     scoreDisplay.textContent = score;
 
-    // 次の数字の正解条件を判定
+    // 次の数字の正解条件を判定（この情報はUI更新には使わず、ボタンの活性化のみに使用）
     const nextIsAho = isAhoCondition(currentNumber);
 
     /**
@@ -74,12 +74,8 @@ function updateUI(isCorrect) {
         if (isGameActive) {
             button.disabled = false;
             button.classList.remove('opacity-50', 'cursor-not-allowed');
-            // 押すべきボタンをハイライト
-            if (isCorrectChoice) {
-                button.classList.add('ring-4', 'ring-offset-2', 'ring-yellow-500');
-            } else {
-                button.classList.remove('ring-4', 'ring-offset-2', 'ring-yellow-500');
-            }
+            // 【修正ポイント】正解時のハイライト表示を削除
+            button.classList.remove('ring-4', 'ring-offset-2', 'ring-yellow-500'); 
         } else {
             button.disabled = true;
             button.classList.add('opacity-50', 'cursor-not-allowed');
@@ -87,7 +83,7 @@ function updateUI(isCorrect) {
         }
     };
 
-    // ボタンの状態を更新
+    // ボタンの状態を更新 (活性化/非活性化のみ)
     // 「アホじゃない」ボタンが左
     toggleButtonState(notAhoButton, !nextIsAho);
     // 「アホ！」ボタンが右
