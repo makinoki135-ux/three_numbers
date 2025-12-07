@@ -9,7 +9,6 @@ let timerInterval = null;
 let isGameActive = false;
 
 // DOM要素の参照
-// DOMContentLoadedで確実に要素を取得するため、変数宣言のみ行います
 let scoreDisplay;
 let timerDisplay;
 let numberDisplayArea;
@@ -66,15 +65,15 @@ function updateUI(isCorrect) {
     const nextIsAho = isAhoCondition(currentNumber);
 
     /**
-     * ボタンの活性化とハイライトを設定
+     * ボタンの活性化と非活性化を設定
+     * 【重要】正解がバレるリング（枠）の表示はここで行いません。
      * @param {HTMLElement} button - 対象ボタン要素
-     * @param {boolean} isCorrectChoice - そのボタンが現在の数字で正解となるか
      */
-    const toggleButtonState = (button, isCorrectChoice) => {
+    const toggleButtonState = (button) => {
         if (isGameActive) {
             button.disabled = false;
             button.classList.remove('opacity-50', 'cursor-not-allowed');
-            // 【修正ポイント】正解時のハイライト表示を削除
+            // 正解時のハイライト表示を削除
             button.classList.remove('ring-4', 'ring-offset-2', 'ring-yellow-500'); 
         } else {
             button.disabled = true;
@@ -84,10 +83,8 @@ function updateUI(isCorrect) {
     };
 
     // ボタンの状態を更新 (活性化/非活性化のみ)
-    // 「アホじゃない」ボタンが左
-    toggleButtonState(notAhoButton, !nextIsAho);
-    // 「アホ！」ボタンが右
-    toggleButtonState(ahoButton, nextIsAho);
+    toggleButtonState(notAhoButton);
+    toggleButtonState(ahoButton);
 
 
     // 正解/不正解時の背景アニメーション
@@ -214,7 +211,6 @@ function initializeGame() {
     });
 
     // 初期化: スタート画面を表示
-    // currentNumberの初期値を1にしてからupdateUIを呼び出す
     currentNumber = 1;
     scoreDisplay.textContent = '0'; // スコア表示は0
     timerDisplay.textContent = TIME_LIMIT; // タイマー表示を初期値に設定
